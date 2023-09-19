@@ -17,21 +17,33 @@ void bubblesort (int*A,int size){
     }}
 void selectSort (int*A,int size){
 
-    for(int i=0;i<size-1;i++){
-        int min=i;
+    for(int i=0;i<size;i++){
+        int min = i;
         for(int j=i+1;j<size;j++){
-            if(A[min]>A[j]){min=j;}
+            if(A[j]<A[min])min=j;
         }
         swap(&A[i],&A[min]);
-    }   }
-
-void print      (int*A,int size){puts("");
+    }
+    
+    }
+void insertSort(int*A,int size){
+    int j=0;
+    int temp;
+    for(int i=1;i<size;i++){
+        j=i-1;
+        temp=A[i];
+        while(j>=0 && A[j]>temp){
+            A[j+1]=A[j];
+            j--;
+            }
+A[j+1]=temp;
+        }
+    }
+void print      (int*A,int size){   
+    puts("");
     for(int i=0;i<size;i++){
         printf("[%d]",A[i]);
     }}
-
-
-
 
 int  main       (int argc,char*argv[]){
     int size=atoi(argv[1]);
@@ -41,6 +53,7 @@ int  main       (int argc,char*argv[]){
     }
     print(A,size);
     //bubblesort(A,size);
-    selectSort(A,size);
+    //selectSort(A,size);
+    insertSort(A,size);
     print(A,size);
 }
