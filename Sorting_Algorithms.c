@@ -20,7 +20,8 @@ void selectSort (int*A,int size){
     for(int i=0;i<size;i++){
         int min = i;
         for(int j=i+1;j<size;j++){
-            if(A[j]<A[min])min=j;
+            if(A[j]<A[min])
+                min=j;
         }
         swap(&A[i],&A[min]);
     }
