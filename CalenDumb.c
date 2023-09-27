@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -11,6 +10,7 @@ struct evento{
     int wday;
     int mese;
     char title[7];
+    
 };
 
 typedef struct Nodo{
@@ -21,7 +21,20 @@ typedef struct Nodo{
 
 
 
+int calculateWday(int year, int month, int day) {
+    int q, t, x;
 
+    if (month <= 2) {
+        month += 12;
+        year--;
+    }
+
+    q = month / 3;
+    t = day + (13 * (month + 1) / 5) + year + (year / 4) - (year / 100) + (year / 400);
+
+    x = t + (q * year) - (q * (year / 4)) + (q * (year / 100)) - (q * (year / 400));
+    return x % 7;
+}
 
 void createHead (nodo**head,int day,int month,int year, int wday){
     
@@ -92,13 +105,60 @@ void createHead (nodo**head,int day,int month,int year, int wday){
 
 }
 
+void checkFile(nodo**head){     //funzione che legge il contenuto del file riga per riga, spezzetta il contenuto e lo immagazzina in una struct
+    FILE*fptr=fopen("DATA.txt","r");
+    struct evento lettura;
+while (!feof(fptr)) {
+    char riga[30];
+    if (fgets(riga, 30, fptr) == NULL) {
+        break; // Esci dal ciclo se non riesci a leggere una riga
+    }
+    lettura.giorno = atoi(strtok(riga, "|"));
+    lettura.mese = atoi(strtok(NULL, "|"));
+    char *temp = strtok(NULL, "|");
 
-struct evento createStruct(){
-    struct evento new;
-    return new;
+    if (temp != NULL) {strcpy(lettura.title, temp);}
+    else {   strcpy(lettura.title, ""); }
+    temp = strtok(NULL, "|");
+    if(temp != NULL){lettura.ora = atof(temp);}
+    else {lettura.ora = 0.0;}
+    temp = strtok(NULL, "|");
+    if(temp != NULL) { lettura.wday = atoi(temp);}
+    else {lettura.wday = 0; }
+    
+    //printf("\nLetto da file:\nGiorno:%d\tMese:%d\nTitle:%s\tOra:%.2f\tWday:%d\n", lettura.giorno, lettura.mese, lettura.title, lettura.ora, lettura.wday);
 }
 
-char* gsettString(int n){
+
+}
+void newEvent(nodo**head){
+
+    struct evento new;
+    system("clear");
+    printf("Inserisci nome evento:\n\t");
+    scanf("%s",new.title);
+    
+    system("clear");
+    printf("Inserisci giorno evento:\n\t");
+    scanf("%d",&new.giorno);
+
+    system("clear");
+    printf("Inserisci mese evento:\n\t");
+    scanf("%d",&new.mese);
+
+    system("clear");
+    printf("Inserisci ora evento:\n\t");
+    scanf("%f",&new.ora);
+
+    new.wday=calculateWday(2023,new.mese,new.giorno);
+
+    FILE*fptr=fopen("DATA.txt","r");
+    fprintf(fptr,"%d|%d|%s|%f|%d-",new.giorno,new.mese,new.titolo,new.ora,new.wday);
+
+}   //dobbiamo dire nella stampa che se è disponibile un titolo va stampato.
+
+
+char* wdayString(int n){
     char*giorno;
     switch(n){
         case 1: return "Lun";
@@ -140,7 +200,7 @@ for(int i=0;i<size;i++){
 char impegno[7]="NULL";
 
 while(iter!=NULL)   {printf("\t%d\t |",iter->info.giorno);    iter=iter->next;}   iter=*head;puts("");
-while(iter!=NULL)   {printf("\t%s\t |",gsettString(iter->info.wday));    iter=iter->next;}   iter=*head;puts("");
+while(iter!=NULL)   {printf("\t%s\t |",wdayString(iter->info.wday));    iter=iter->next;}   iter=*head;puts("");
 while(iter!=NULL)   {printf("\t\t_|_");    iter=iter->next;}   iter=*head;puts("");
 while(iter!=NULL)   {printf("\t%s\t |",impegno);    iter=iter->next;}   iter=*head;puts("");
 while(iter!=NULL)   {printf("\t\t |");    iter=iter->next;}   iter=*head;puts("");
@@ -166,20 +226,15 @@ int main(){
     int wday  = current_time.tm_wday ;
     int year = current_time.tm_year + 1900;
 
-
     printf("\nmonth: %d\nday: %d\nwday: %d\n", month,day,wday);
     
     nodo**head=malloc(sizeof(nodo*));
 
-    //Inserimento input newEvent
-    char titleimp[7];
-    printf("\nInserisci il giorno dell'evento\n");
-    scanf("%s",titleInp);                                   //  ultima modifica 27-09
-    system("clear");
-    printf("\nInserisci il titolo dell'evento\n");
-    printf("\nInserisci l'ora dell'evento\n");
+   
 
     createHead(head,day,month,year,wday);
+    
+    checkFile(head);
 
 
     printList(head);
