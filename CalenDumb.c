@@ -1,3 +1,4 @@
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -9,6 +10,7 @@ struct evento{
     float ora;
     int wday;
     int mese;
+    char title[7];
 };
 
 typedef struct Nodo{
@@ -43,7 +45,7 @@ void createHead (nodo**head,int day,int month,int year, int wday){
             *head=newNodo;
             (*head)->prev=NULL;
             iter=*head;
-          
+
             
         }
 
@@ -108,16 +110,42 @@ char* gsettString(int n){
         case 7: return "Dom";
     }
 }
+char* strMonth(int n){
+    switch(n){
+        case 1: return "Gen";
+        case 2: return "Feb";
+        case 3: return "Mar";
+        case 4: return "Apr";
+        case 5: return "Mag";
+        case 6: return "Giu";
+        case 7: return "Lug";
+        case 8: return "Aug";
+        case 9: return "Sep";
+        case 10: return "Ott";
+        case 11: return "Nov";
+        case 12: return "Dic";
+    }
+}
 
 void printList(nodo**head){puts("");
     nodo*iter=*head;
+int size=115;
+for(int i=0;i<size;i++){
+    printf("_");
+    if(i==size/2){
+            printf("%s",strMonth(iter->info.mese));
+        };
+    }
+    puts("\n");
+char impegno[7]="NULL";
+
+while(iter!=NULL)   {printf("\t%d\t |",iter->info.giorno);    iter=iter->next;}   iter=*head;puts("");
+while(iter!=NULL)   {printf("\t%s\t |",gsettString(iter->info.wday));    iter=iter->next;}   iter=*head;puts("");
+while(iter!=NULL)   {printf("\t\t_|_");    iter=iter->next;}   iter=*head;puts("");
+while(iter!=NULL)   {printf("\t%s\t |",impegno);    iter=iter->next;}   iter=*head;puts("");
+while(iter!=NULL)   {printf("\t\t |");    iter=iter->next;}   iter=*head;puts("");
 
 
-while(iter!=NULL){    printf("\t%d\t",iter->info.giorno);    iter=iter->next;}
-iter=*head;puts("");
-while(iter!=NULL){    printf("\t%s\t",gsettString(iter->info.wday));    iter=iter->next;}
-iter=*head;
-puts("\n");
 
 
 }
@@ -142,6 +170,15 @@ int main(){
     printf("\nmonth: %d\nday: %d\nwday: %d\n", month,day,wday);
     
     nodo**head=malloc(sizeof(nodo*));
+
+    //Inserimento input newEvent
+    char titleimp[7];
+    printf("\nInserisci il giorno dell'evento\n");
+    scanf("%s",titleInp);                                   //  ultima modifica 27-09
+    system("clear");
+    printf("\nInserisci il titolo dell'evento\n");
+    printf("\nInserisci l'ora dell'evento\n");
+
     createHead(head,day,month,year,wday);
 
 
