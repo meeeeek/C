@@ -111,7 +111,7 @@ void checkFile(nodo**head){     //funzione che legge il contenuto del file riga 
 while (!feof(fptr)) {
     char riga[30];
     if (fgets(riga, 30, fptr) == NULL) {
-        break; // Esci dal ciclo se non riesci a leggere una riga
+        break; // Esci dal ciclo se non riesci a leggere una riga (fine file)
     }
     lettura.giorno = atoi(strtok(riga, "|"));
     lettura.mese = atoi(strtok(NULL, "|"));
@@ -152,10 +152,10 @@ void newEvent(nodo**head){
 
     new.wday=calculateWday(2023,new.mese,new.giorno);
 
-    FILE*fptr=fopen("DATA.txt","r");
+    FILE*fptr=fopen("DATA.txt","w");
     fprintf(fptr,"%d|%d|%s|%f|%d-",new.giorno,new.mese,new.titolo,new.ora,new.wday);
 
-}   //dobbiamo dire nella stampa che se è disponibile un titolo va stampato.
+}   //dobbiamo dire nella stampa che se è disponibile un titolo va stampato altrimenti " " blank.
 
 
 char* wdayString(int n){
@@ -216,11 +216,9 @@ int main(){
     time_t t;
     struct tm current_time;
     
-    // Ottenere l'orario corrente
     time(&t);
     current_time = *localtime(&t);
-    
-    // Aggiungere 1 al mese (per ottenere il numero del mese da 1 a 12)
+
     int month = current_time.tm_mon + 1;
     int day   = current_time.tm_mday ;
     int wday  = current_time.tm_wday ;
